@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'" />
+  <title>lampnook</title>
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <meta name="theme-color" content="#1c1722" />
+  <script type="module" crossorigin src="/lampnook/assets/main-BHTM_rTG.js"></script>
+  <link rel="modulepreload" crossorigin href="/lampnook/assets/shadowInvalidator-Zu_QOiiX.js">
+  <link rel="stylesheet" crossorigin href="/lampnook/assets/shadowInvalidator-Dw9ivRHH.css">
+</head>
+<body class="is-loading">
+  <canvas id="stage" tabindex="0" aria-label="部屋"></canvas>
+  <div id="veil" class="veil" aria-hidden="true"></div>
+  <div id="ui">
+    <section id="door" class="door">
+      <p class="door-title">lampnook</p>
+      <p class="door-tagline">集中するための、自分だけの部屋</p>
+      <button id="enter" class="enter" type="button">入室する</button>
+      <div class="door-subs">
+        <button id="dress-toggle" class="door-sub" type="button" aria-expanded="false" aria-controls="dress">身支度</button>
+        <button id="place-toggle" class="door-sub" type="button" aria-describedby="place-toggle-hint">場所: <span class="place-current">部屋</span></button>
+        <span id="place-toggle-hint" hidden>押すとカフェへ切り替えます</span>
+      </div>
+      <p class="door-hint">Enter でも入れます</p>
+      <section id="dress" class="dress" hidden aria-label="身支度">
+        <div class="dress-row" data-dress="outfit" role="group" aria-labelledby="dress-l-outfit">
+          <p class="dress-head"><span id="dress-l-outfit" class="dress-label">服</span><span class="dress-current"></span></p>
+          <div class="dress-options"></div>
+        </div>
+        <div class="dress-row" data-dress="hair" role="group" aria-labelledby="dress-l-hair">
+          <p class="dress-head"><span id="dress-l-hair" class="dress-label">髪型</span><span class="dress-current"></span></p>
+          <div class="dress-options"></div>
+        </div>
+        <div class="dress-row" data-dress="hairColor" role="group" aria-labelledby="dress-l-hairColor">
+          <p class="dress-head"><span id="dress-l-hairColor" class="dress-label">髪の色</span><span class="dress-current"></span></p>
+          <div class="dress-options"></div>
+        </div>
+        <div class="dress-row" data-dress="skin" role="group" aria-labelledby="dress-l-skin">
+          <p class="dress-head"><span id="dress-l-skin" class="dress-label">肌</span><span class="dress-current"></span></p>
+          <div class="dress-options"></div>
+        </div>
+        <div class="dress-row" data-dress="outfitColor" role="group" aria-labelledby="dress-l-outfitColor">
+          <p class="dress-head"><span id="dress-l-outfitColor" class="dress-label">服の色</span><span class="dress-current"></span></p>
+          <div class="dress-options"></div>
+        </div>
+      </section>
+    </section>
+
+    <section id="hud" class="hud" aria-live="polite">
+      <div class="timer">
+        <span id="timer-label" class="timer-label">集中</span>
+        <span id="timer-clock" class="timer-clock">25:00</span>
+      </div>
+      <div class="timer-controls">
+        <div class="presets" role="group" aria-label="集中時間">
+          <button type="button" data-minutes="25">25</button>
+          <button type="button" data-minutes="50">50</button>
+          <button type="button" data-minutes="90">90</button>
+          <input id="custom-minutes" type="number" min="5" max="180" step="5" placeholder="分" aria-label="分を入力" />
+        </div>
+        <button id="timer-start" type="button" class="primary">はじめる</button>
+        <button id="timer-pause" type="button" hidden>一時停止</button>
+        <button id="timer-stop" type="button" hidden>やめる</button>
+      </div>
+      <p id="lock-note" class="lock-note" hidden>別のウィンドウでタイマーを動かしています</p>
+    </section>
+
+    <section id="panels" class="panels">
+      <details id="mixer" class="panel" name="panel">
+        <summary>音 <span id="playing-bars" class="bars" aria-hidden="true"><i></i><i></i><i></i></span></summary>
+        <div id="sound-presets" class="presets-sound-groups" role="group" aria-label="音の組み合わせ"></div>
+        <button id="sound-auto" class="sound-auto" type="button" aria-pressed="true">時間帯で選ぶ</button>
+        <details class="fine">
+          <summary>細かく調整</summary>
+          <label class="volume"><span class="volume-name">全体</span><input data-volume="master" type="range" min="0" max="1" step="0.01" /><output class="volume-num" aria-hidden="true"></output></label>
+          <label class="volume"><span class="volume-name">曲</span><input data-volume="music" type="range" min="0" max="1" step="0.01" /><output class="volume-num" aria-hidden="true"></output></label>
+          <div id="ambient-sliders"></div>
+        </details>
+        <div class="music-row">
+          <button id="music-toggle" type="button">曲を再生</button>
+          <button id="music-skip" type="button">次の曲</button>
+          <span id="music-name" class="music-name"></span>
+        </div>
+        <div id="folder-row" class="folder-row" hidden>
+          <button id="folder-pick" type="button">曲のフォルダを選ぶ</button>
+          <p id="folder-status" class="folder-status"></p>
+          <button id="folder-grant" type="button" hidden>許可する</button>
+          <button id="folder-disconnect" type="button" hidden>フォルダ連携を解除</button>
+        </div>
+        <label class="file">曲を取り込む <input id="music-import" type="file" accept="audio/*" multiple /></label>
+        <ul id="track-list" class="track-list" hidden></ul>
+        <details class="info">
+          <summary aria-label="補足">i</summary>
+          <p id="storage-note" class="note" hidden></p>
+          <p class="note">取り込んだ曲はこのブラウザ内に保存されます。元のファイルも手元に残してください。</p>
+        </details>
+        <p class="credits"><a href="./audio/CREDITS.md" target="_blank" rel="noopener">音の出典</a></p>
+      </details>
+      <details id="room-panel" class="panel" name="panel">
+        <summary>部屋</summary>
+        <div id="place-box" class="row listbox">
+          <span id="place-label" class="listbox-label">場所</span>
+          <button id="place" type="button" class="listbox-button" aria-haspopup="listbox" aria-expanded="false"
+            aria-labelledby="place-label place"><span class="listbox-value">部屋</span></button>
+          <ul id="place-list" class="listbox-list" role="listbox" aria-labelledby="place-label" tabindex="-1" hidden></ul>
+        </div>
+        <p id="place-note" class="note" hidden></p>
+        <p class="room-total">累計 <span id="total-minutes">0</span> 分</p>
+        <p id="postcard-count" class="room-reward"></p>
+        <p id="book-count" class="room-reward"></p>
+        <p id="next-unlock" class="room-next"></p>
+        <ul id="unlock-list" class="unlock-list" aria-label="解放の一覧"></ul>
+        <p id="unplaced-note" class="room-unplaced" hidden></p>
+        <p id="cafe-note" class="room-unplaced" hidden>カフェの配置は固定です</p>
+        <button id="edit-start" type="button" class="room-edit">模様替え</button>
+        <div id="reduce-motion-box" class="row listbox">
+          <span id="reduce-motion-label" class="listbox-label">動きを減らす</span>
+          <!-- 自作の選択欄（M4 §3.3）。id は E2E が触っている名前を引き継ぐ -->
+          <button id="reduce-motion" type="button" class="listbox-button" aria-haspopup="listbox" aria-expanded="false"
+            aria-labelledby="reduce-motion-label reduce-motion"><span class="listbox-value">システムに合わせる</span></button>
+          <ul id="reduce-motion-list" class="listbox-list" role="listbox" aria-labelledby="reduce-motion-label" tabindex="-1" hidden></ul>
+        </div>
+      </details>
+      <details id="backup-panel" class="panel" name="panel">
+        <summary>バックアップ</summary>
+        <div class="backup-row">
+          <button id="backup-export" type="button">書き出す</button>
+          <label class="file">読み込む <input id="backup-import" type="file" accept="application/json,.json" /></label>
+        </div>
+        <div id="backup-confirm" class="confirm" hidden>
+          <p>今の部屋と記録を、このバックアップで置き換えます。</p>
+          <button id="backup-confirm-yes" type="button" class="primary">置き換える</button>
+          <button id="backup-confirm-no" type="button">やめる</button>
+        </div>
+        <details class="info">
+          <summary aria-label="補足">i</summary>
+          <p class="note">曲はバックアップに含まれません。</p>
+        </details>
+      </details>
+
+      <!-- スタンプ帳（M8a §5）。暦の表は src/ui/stampPanel.ts が描く。押せない向きのボタンは aria-disabled（フォーカスを残す） -->
+      <details id="stamp-panel" class="panel" name="panel">
+        <summary>スタンプ帳</summary>
+        <div class="stamp-nav">
+          <button id="stamp-prev" type="button" aria-disabled="true">前の月</button>
+          <p id="stamp-month" class="stamp-month" aria-live="polite"></p>
+          <button id="stamp-next" type="button" aria-disabled="true">次の月</button>
+        </div>
+        <table id="stamp-table" class="stamp-table"></table>
+        <p class="stamp-summary"><span id="stamp-summary-month"></span><span id="stamp-summary-total"></span></p>
+      </details>
+    </section>
+
+    <section id="edit-bar" class="edit-bar" aria-label="模様替え">
+      <p id="edit-message" class="edit-message" role="status"></p>
+      <!-- 操作の説明は入力の種類で出し分ける（styles.css の (hover: none) and (pointer: coarse)）。見えない方は display:none で読み上げにも出ない -->
+      <p class="edit-hint"><span class="edit-hint-pointer">ドラッグで動かす・矢印で 1 マス・Tab で選ぶ・Esc で完了</span><span class="edit-hint-touch">ドラッグで動かす・タップで選ぶ・完了で終わる</span></p>
+      <div class="edit-actions">
+        <button id="edit-rotate" type="button">回転（R）</button>
+        <button id="edit-undo" type="button">元に戻す</button>
+        <button id="edit-done" type="button" class="primary">完了</button>
+      </div>
+    </section>
+
+    <!-- aria-label は付けない: 見える文言（消音／音を戻す）がそのまま読み上げ名になる。
+         aria-pressed は付けない（最終レビュー Minor #4: 文言と二重に状態を知らせてしまうため） -->
+    <button id="focus-mute" class="focus-mute" type="button">消音</button>
+
+    <!-- 入室の灯りの粒（M4 §4.2）。演出の 0〜0.8 秒だけ出る。読み上げには出さない -->
+    <i id="ember" class="ember" aria-hidden="true" hidden></i>
+    <p id="toast" class="toast" role="status"></p>
+    <p id="status" class="status" role="alert"></p>
+    <section id="fatal" class="fatal" hidden>
+      <p id="fatal-message"></p>
+    </section>
+  </div>
+</body>
+</html>
