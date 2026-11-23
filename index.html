@@ -14,9 +14,9 @@
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-title" content="lampnook" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <script type="module" crossorigin src="/lampnook/assets/main-_cS8jzPJ.js"></script>
-  <link rel="modulepreload" crossorigin href="/lampnook/assets/shadowInvalidator-BGiaydNc.js">
-  <link rel="stylesheet" crossorigin href="/lampnook/assets/shadowInvalidator-CNv98OU5.css">
+  <script type="module" crossorigin src="/lampnook/assets/main-CJRhdKFW.js"></script>
+  <link rel="modulepreload" crossorigin href="/lampnook/assets/shadowInvalidator-Cm71Xi2A.js">
+  <link rel="stylesheet" crossorigin href="/lampnook/assets/shadowInvalidator-B22G3PQh.css">
 </head>
 <body class="is-loading">
   <canvas id="stage" tabindex="0" aria-label="部屋"></canvas>
@@ -123,6 +123,12 @@
         <p id="unplaced-note" class="room-unplaced" hidden></p>
         <p id="cafe-note" class="room-unplaced" hidden>カフェの配置は固定です</p>
         <button id="edit-start" type="button" class="room-edit">模様替え</button>
+        <div id="timer-view-box" class="row listbox">
+          <span id="timer-view-label" class="listbox-label">集中中の表示</span>
+          <button id="timer-view" type="button" class="listbox-button" aria-haspopup="listbox" aria-expanded="false"
+            aria-labelledby="timer-view-label timer-view"><span class="listbox-value">部屋</span></button>
+          <ul id="timer-view-list" class="listbox-list" role="listbox" aria-labelledby="timer-view-label" tabindex="-1" hidden></ul>
+        </div>
         <div id="reduce-motion-box" class="row listbox">
           <span id="reduce-motion-label" class="listbox-label">動きを減らす</span>
           <!-- 自作の選択欄（M4 §3.3）。id は E2E が触っている名前を引き継ぐ -->
@@ -169,6 +175,18 @@
         <button id="edit-rotate" type="button">回転（R）</button>
         <button id="edit-undo" type="button">元に戻す</button>
         <button id="edit-done" type="button" class="primary">完了</button>
+      </div>
+    </section>
+
+    <!-- バーのタイマー（集中中の表示が「バー」のとき、集中・休憩の間だけ部屋の代わりに出る）。
+         バーの 20 本は src/ui/barView.ts が作る。残り時間の読み上げは左下のタイマー（aria-live）に任せる -->
+    <section id="bar-view" class="bar-view" aria-label="バーのタイマー">
+      <p id="bar-label" class="bar-label">集中</p>
+      <p id="bar-clock" class="bar-clock">25:00</p>
+      <div id="bar-meter" class="bar-meter" role="meter" aria-label="残り" aria-valuemin="0" aria-valuemax="20" aria-valuenow="20"></div>
+      <div class="bar-actions">
+        <button id="bar-stop" type="button" class="bar-button">やめる</button>
+        <button id="bar-pause" type="button" class="bar-button is-primary">一時停止</button>
       </div>
     </section>
 
