@@ -2,14 +2,21 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- viewport-fit=cover: iPhone のノッチ・ホームバーの下まで部屋を描き、操作は styles.css の --safe-* で避ける -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'" />
   <title>lampnook</title>
   <link rel="manifest" href="./manifest.webmanifest" />
   <meta name="theme-color" content="#1c1722" />
-  <script type="module" crossorigin src="/lampnook/assets/main-BHTM_rTG.js"></script>
-  <link rel="modulepreload" crossorigin href="/lampnook/assets/shadowInvalidator-Zu_QOiiX.js">
-  <link rel="stylesheet" crossorigin href="/lampnook/assets/shadowInvalidator-Dw9ivRHH.css">
+  <!-- iPhone の「ホーム画面に追加」: アイコン（manifest のアイコンは古い iOS が読まない）・名前・上のステータスバーを部屋に重ねる -->
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="lampnook" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <script type="module" crossorigin src="/lampnook/assets/main-PbtNgKY6.js"></script>
+  <link rel="modulepreload" crossorigin href="/lampnook/assets/shadowInvalidator-Cgn8hjMu.js">
+  <link rel="stylesheet" crossorigin href="/lampnook/assets/shadowInvalidator-PesrKZtn.css">
 </head>
 <body class="is-loading">
   <canvas id="stage" tabindex="0" aria-label="部屋"></canvas>
